@@ -11,7 +11,6 @@ const insertUser = async(req,res)=>{
     let {name,surname,age,fav_coding_lang,fav_car,eye_color,username,password} =req.body
     let hashedP = await hash(password,10)
     await insertUserDb(name,surname,age,fav_coding_lang,fav_car,eye_color,username,hashedP)
-    
     res.send('Data was inserted successfully')
 }
 const deleteUser = async(req,res)=>{

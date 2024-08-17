@@ -1,6 +1,6 @@
 import { compare } from "bcrypt";
 import { getUserDb } from "../model/userDb.js";
-import jwt from 'jsonwebtoken'
+import jwt, { decode } from 'jsonwebtoken'
 import {config} from 'dotenv'
 config()
 
@@ -18,4 +18,21 @@ const checkUser= async(req,res,next)=>{
     }
 }
 
-export {checkUser}
+const verifyAToken =(req,res,next)=>{
+    let {cookie} = req.headers
+    // checks if the token exists first
+    let token = cookie && cookie.split('=')[1]
+    console.log(cookie);
+    jwt.verify(token,process.env.SECRET_KEY,(err,decoded)=>{
+        console.log(decoded);
+        if(err){
+            console.log(err);
+            res.json({message:'Token has expired'})
+            return
+        }
+        req.body.user = decoded
+        console.log(decoded);
+        next() 
+    })
+}
+export {checkUser,verifyAToken}

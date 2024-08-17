@@ -46,6 +46,7 @@ export default {
         },
         loginUser(){
             this.$store.dispatch('loginUser',{username:this.username,password:this.password})
+            
         }
     }
 }

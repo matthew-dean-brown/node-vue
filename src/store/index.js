@@ -2,15 +2,24 @@ import { createStore } from 'vuex'
 import axios from 'axios'
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
+import {useCookies} from 'vue-cookies'
+import router from '@/router';
 
-axios.defaults.headers.token = $cookies.get('token')
+
+axios.defaults.withCredentials =true
+axios.defaults.headers = $cookies.get('token')
+
 
 export default createStore({
   state: {
+    fruits:null
   },
   getters: {
   },
   mutations: {
+    setFruits(state,payload){
+      state.fruits = payload
+    }
   },
   actions: {
     addUser({commit},info){
@@ -41,8 +50,16 @@ export default createStore({
           "transition": "zoom",
           "dangerouslyHTMLString": true
         })
+        await router.push('/')
+        location.reload()
       }
-    }
+    },
+    async getFruits({commit}){
+      let {data} = await axios.get('http://localhost:5050/fruit')
+      commit('setFruits',data)},
+    async addToCart(){
+      let {data} = await axios.post('http://localhost:5050/fruit/cart')
+      console.log(data);}
     
   },
   modules: {
